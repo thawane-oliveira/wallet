@@ -1,18 +1,79 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { coinArray } from '../redux/actions';
+import { coinArray, quotationAndInfo } from '../redux/actions';
 
 class WalletForm extends Component {
+  state = {
+    id: 0,
+    value: 0,
+    description: '',
+    currency: 'USD',
+    method: 'Dinheiro',
+    tag: 'Alimentação',
+    exchangeRates: {},
+  };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(coinArray());
+    // delete data.USDT;
   }
 
-  render() {
-    const { currency } = this.props;
-    // { console.log(currencies); }
+  onInputChange = ({ target }) => {
+    const { name, value } = target;
+    this.setState({ [name]: value });
+  };
 
+  // quotationCurrency = async () => {
+  //   // const { dispatch } = this.props;
+  //   const apiResponse = coinArray();
+  //   delete apiResponse.USDT;
+  //   this.setState({
+  //     exchangeRates: apiResponse,
+  //   }, this.addExpense);
+  // };
+
+  currApiRequest = async () => {
+    const response = await fetch('https://economia.awesomeapi.com.br/json/all');
+
+    const data = await response.json();
+
+    delete data.USDT;
+
+    return data;
+  };
+
+  addExpense = async () => {
+    const { dispatch } = this.props;
+    const exchangeRates = await this.currApiRequest();
+
+    const item = { ...this.state, exchangeRates };
+
+    dispatch(quotationAndInfo(item));
+
+    this.setState((prevState) => ({
+      id: prevState.id + 1,
+      value: '',
+      description: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: 'Alimentação',
+      exchangeRates,
+    }));
+
+    // this.setState({
+    //   value: '',
+    //   description: '',
+    //   currency: 'USD',
+    //   method: 'Dinheiro',
+    //   tag: 'Alimentação',
+    // });
+  };
+
+  render() {
+    const { currencies } = this.props;
+    const { value, description, currency, method, tag } = this.state;
     return (
       <>
         <p>WalletForm</p>
@@ -25,6 +86,9 @@ class WalletForm extends Component {
               type="number"
               data-testid="value-input"
               id="valueInput"
+              name="value"
+              value={ value }
+              onChange={ this.onInputChange }
             />
           </label>
           <label
@@ -35,6 +99,9 @@ class WalletForm extends Component {
               type="text"
               data-testid="description-input"
               id="descInput"
+              name="description"
+              value={ description }
+              onChange={ this.onInputChange }
             />
           </label>
           <label
@@ -44,8 +111,11 @@ class WalletForm extends Component {
             <select
               data-testid="currency-input"
               id="currency"
+              name="currency"
+              value={ currency }
+              onChange={ this.onInputChange }
             >
-              {currency.map((c) => <option key={ c } value={ c }>{c}</option>)}
+              {currencies.map((c) => <option key={ c } value={ c }>{c}</option>)}
             </select>
           </label>
           <label
@@ -55,10 +125,13 @@ class WalletForm extends Component {
             <select
               data-testid="method-input"
               id="payment"
+              name="method"
+              value={ method }
+              onChange={ this.onInputChange }
             >
-              <option value="dinheiro">Dinheiro</option>
-              <option value="credito">Cartão de crédito</option>
-              <option value="debito">Cartão de débito</option>
+              <option value="Dinheiro">Dinheiro</option>
+              <option value="Cartão de crédito">Cartão de crédito</option>
+              <option value="Cartão de débito">Cartão de débito</option>
             </select>
           </label>
           <label
@@ -68,14 +141,21 @@ class WalletForm extends Component {
             <select
               data-testid="tag-input"
               id="tag"
+              name="tag"
+              value={ tag }
+              onChange={ this.onInputChange }
             >
-              <option value="alimentacao">Alimentação</option>
-              <option value="lazer">Lazer</option>
-              <option value="trabalho">Trabalho</option>
-              <option value="transporte">Transporte</option>
-              <option value="saude">Saúde</option>
+              <option value="Alimentação">Alimentação</option>
+              <option value="Lazer">Lazer</option>
+              <option value="Trabalho">Trabalho</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Saúde">Saúde</option>
             </select>
           </label>
+
+          <button type="button" onClick={ this.addExpense }>
+            Adicionar despesa
+          </button>
         </fieldset>
       </>
     );
@@ -83,14 +163,13 @@ class WalletForm extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  currency: state.wallet.currencies,
+  currencies: state.wallet.currencies,
+  expenses: state.wallet.expenses,
 });
 
 WalletForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  currency: PropTypes.shape({
-    map: PropTypes.func,
-  }).isRequired,
+  currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default connect(mapStateToProps)(WalletForm);

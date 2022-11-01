@@ -1,15 +1,14 @@
 export const SUBMIT_INFO = 'SUBMIT_INFO';
+export const REQUEST = 'REQUEST';
+export const SUCCESS = 'SUCCESS';
+export const ERROR = 'ERROR';
+export const SAVE_QUOTATION = 'SAVE_QUOTATION';
+// export const TOTALSUM = 'TOTALSUM';
 
 export const submitInfo = (receivedInfo) => ({
   type: SUBMIT_INFO,
   email: receivedInfo.email,
 });
-
-//
-
-export const REQUEST = 'REQUEST';
-export const SUCCESS = 'SUCCESS';
-export const ERROR = 'ERROR';
 
 export const request = () => (
   { type: 'REQUEST' }
@@ -17,12 +16,14 @@ export const request = () => (
 
 export const success = (info) => (
   { type: 'SUCCESS',
-    info }
+    info,
+  }
 );
 
 export const fail = (error) => (
   { type: 'ERROR',
-    error }
+    error,
+  }
 );
 
 export const coinArray = () => async (dispatch) => {
@@ -37,3 +38,13 @@ export const coinArray = () => async (dispatch) => {
     dispatch(fail(error));
   }
 };
+
+export const quotationAndInfo = (info) => (
+  { type: 'SAVE_QUOTATION',
+    info,
+  });
+
+// export const expensesSum = (sum) => ({
+//   type: 'TOTALSUM',
+//   sum,
+// });

@@ -1,4 +1,4 @@
-import { ERROR, REQUEST, SAVE_QUOTATION, SUCCESS } from '../actions';
+import { ERROR, EXCLUDE, REQUEST, SAVE_QUOTATION, SUCCESS } from '../actions';
 
 const INITIAL_STATE = {
   currencies: [],
@@ -28,13 +28,23 @@ const wallet = (state = INITIAL_STATE, action) => {
   case SAVE_QUOTATION:
     return {
       ...state,
-      expenses: [...state.expenses, action.info],
+      expenses: [
+        ...state.expenses,
+        action.info,
+      ],
     };
   // case TOTALSUM:
   //   return {
   //     ...state,
   //     total: action.sum,
   //   };
+  case EXCLUDE:
+    return {
+      ...state,
+      expenses: [
+        ...state.expenses.filter((item) => item.id !== Number(action.id)),
+      ],
+    };
   default:
     return state;
   }

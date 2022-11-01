@@ -3,6 +3,7 @@ export const REQUEST = 'REQUEST';
 export const SUCCESS = 'SUCCESS';
 export const ERROR = 'ERROR';
 export const SAVE_QUOTATION = 'SAVE_QUOTATION';
+export const EXCLUDE = 'EXCLUDE';
 // export const TOTALSUM = 'TOTALSUM';
 
 export const submitInfo = (receivedInfo) => ({
@@ -48,3 +49,9 @@ export const quotationAndInfo = (info) => (
 //   type: 'TOTALSUM',
 //   sum,
 // });
+
+export const excludeExpense = (id) => ({
+  type: 'EXCLUDE',
+  id,
+  // xp, estava colocando xp antes, porém pra poder filtrar pelo id mudei isso
+});

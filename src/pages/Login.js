@@ -45,6 +45,7 @@ class Login extends React.Component {
         <div>Login</div>
         <fieldset>
           <label htmlFor="emailInput">
+            E-mail
             <input
               data-testid="email-input"
               type="email"
@@ -57,6 +58,7 @@ class Login extends React.Component {
           </label>
 
           <label htmlFor="passInput">
+            Senha
             <input
               data-testid="password-input"
               type="password"

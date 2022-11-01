@@ -52,6 +52,7 @@ class Login extends React.Component {
               id="emailInput"
               name="email"
               value={ email }
+              placeholder="Digite seu e-mail"
               onChange={ this.onInputChange }
               required
             />
@@ -64,6 +65,7 @@ class Login extends React.Component {
               type="password"
               id="passInput"
               name="password"
+              placeholder="Digite sua senha"
               value={ password }
               onChange={ this.onInputChange }
               required

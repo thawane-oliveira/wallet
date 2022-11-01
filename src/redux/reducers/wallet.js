@@ -28,10 +28,7 @@ const wallet = (state = INITIAL_STATE, action) => {
   case SAVE_QUOTATION:
     return {
       ...state,
-      expenses: [
-        ...state.expenses,
-        action.info,
-      ],
+      expenses: [...state.expenses, action.info],
     };
   // case TOTALSUM:
   //   return {

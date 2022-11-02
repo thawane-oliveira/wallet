@@ -4,6 +4,8 @@ export const SUCCESS = 'SUCCESS';
 export const ERROR = 'ERROR';
 export const SAVE_QUOTATION = 'SAVE_QUOTATION';
 export const EXCLUDE = 'EXCLUDE';
+export const EDIT = 'EDIT';
+export const FINISHED = 'FINISHED';
 // export const TOTALSUM = 'TOTALSUM';
 
 export const submitInfo = (receivedInfo) => ({
@@ -40,10 +42,10 @@ export const coinArray = () => async (dispatch) => {
   }
 };
 
-export const quotationAndInfo = (info) => (
-  { type: 'SAVE_QUOTATION',
-    info,
-  });
+export const quotationAndInfo = (info) => ({
+  type: 'SAVE_QUOTATION',
+  info,
+});
 
 // export const expensesSum = (sum) => ({
 //   type: 'TOTALSUM',
@@ -54,4 +56,14 @@ export const excludeExpense = (id) => ({
   type: 'EXCLUDE',
   id,
   // xp, estava colocando xp antes, porém pra poder filtrar pelo id mudei isso
+});
+
+export const editExpense = (id) => ({
+  type: 'EDIT',
+  id,
+});
+
+export const finishEditExpense = (info) => ({
+  type: 'FINISHED',
+  info,
 });

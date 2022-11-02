@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { coinArray, quotationAndInfo } from '../redux/actions';
+import { coinArray, finishEditExpense, quotationAndInfo } from '../redux/actions';
 
 class WalletForm extends Component {
   state = {
     id: 0,
-    value: 0,
+    value: '',
     description: '',
     currency: 'USD',
     method: 'Dinheiro',
@@ -14,10 +14,13 @@ class WalletForm extends Component {
     exchangeRates: {},
   };
 
+  resetState = {
+    value: '', description: '', currency: 'USD', method: 'Dinheiro', tag: 'Alimentação',
+  };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(coinArray());
-    // delete data.USDT;
   }
 
   onInputChange = ({ target }) => {
@@ -25,54 +28,32 @@ class WalletForm extends Component {
     this.setState({ [name]: value });
   };
 
-  // quotationCurrency = async () => {
-  //   // const { dispatch } = this.props;
-  //   const apiResponse = coinArray();
-  //   delete apiResponse.USDT;
-  //   this.setState({
-  //     exchangeRates: apiResponse,
-  //   }, this.addExpense);
-  // };
-
   currApiRequest = async () => {
     const response = await fetch('https://economia.awesomeapi.com.br/json/all');
-
     const data = await response.json();
-
     delete data.USDT;
-
     return data;
   };
 
   addExpense = async () => {
     const { dispatch } = this.props;
     const exchangeRates = await this.currApiRequest();
-
     const item = { ...this.state, exchangeRates };
-
     dispatch(quotationAndInfo(item));
-
     this.setState((prevState) => ({
-      id: prevState.id + 1,
-      value: '',
-      description: '',
-      currency: 'USD',
-      method: 'Dinheiro',
-      tag: 'Alimentação',
-      exchangeRates,
+      ...this.resetState, id: prevState.id + 1, exchangeRates,
     }));
+  };
 
-    // this.setState({
-    //   value: '',
-    //   description: '',
-    //   currency: 'USD',
-    //   method: 'Dinheiro',
-    //   tag: 'Alimentação',
-    // });
+  saveEdit = () => {
+    const { expenses, id, dispatch } = this.props;
+    const rateOfDay = expenses.find((item) => item.id === id).exchangeRates;
+    dispatch(finishEditExpense({ ...this.state, id, exchangeRates: rateOfDay }));
+    this.setState({ ...this.resetState });
   };
 
   render() {
-    const { currencies } = this.props;
+    const { currencies, shouldEdit } = this.props;
     const { value, description, currency, method, tag } = this.state;
     return (
       <>
@@ -104,9 +85,7 @@ class WalletForm extends Component {
               onChange={ this.onInputChange }
             />
           </label>
-          <label
-            htmlFor="currency"
-          >
+          <label htmlFor="currency">
             Moeda
             <select
               data-testid="currency-input"
@@ -152,10 +131,19 @@ class WalletForm extends Component {
               <option value="Saúde">Saúde</option>
             </select>
           </label>
+          { shouldEdit ? (
+            <button
+              type="button"
+              onClick={ this.saveEdit }
+              data-testid="edit-btn2"
+            >
+              Editar despesa
 
-          <button type="button" onClick={ this.addExpense }>
-            Adicionar despesa
-          </button>
+            </button>
+          )
+            : (
+              <button type="button" onClick={ this.addExpense }>Adicionar despesa</button>
+            )}
         </fieldset>
       </>
     );
@@ -165,11 +153,16 @@ class WalletForm extends Component {
 const mapStateToProps = (state) => ({
   currencies: state.wallet.currencies,
   expenses: state.wallet.expenses,
+  shouldEdit: state.wallet.shouldEdit,
+  id: state.wallet.id,
 });
 
 WalletForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
+  shouldEdit: PropTypes.bool.isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  id: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps)(WalletForm);

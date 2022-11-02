@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { excludeExpense } from '../redux/actions';
+import { editExpense, excludeExpense } from '../redux/actions';
 
 // consultado sobre table, thead e tbody no w3schools: https://www.w3schools.com/tags/tag_thead.asp
 class Table extends Component {
@@ -12,6 +12,11 @@ class Table extends Component {
     // console.log(filterXp); o filtro por aqui estava removendo somente o id do objeto, resultando em dois objetos acabarem recebendo id 0. Mudei o filter para o reducer da wallet e deu certo
 
     dispatch(excludeExpense(target.id));
+  };
+
+  editXp = ({ target }) => {
+    const { dispatch } = this.props;
+    dispatch(editExpense(Number(target.id)));
   };
 
   render() {
@@ -33,7 +38,7 @@ class Table extends Component {
         </thead>
         <tbody>
           {expenses.map((item) => (
-            <tr key={ item.id }>
+            <tr key={ item.description + item.value + Math.random() }>
               <td>{item.description}</td>
               <td>{item.tag}</td>
               <td>{item.method}</td>

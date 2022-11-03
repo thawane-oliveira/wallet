@@ -47,11 +47,6 @@ export const quotationAndInfo = (info) => ({
   info,
 });
 
-// export const expensesSum = (sum) => ({
-//   type: 'TOTALSUM',
-//   sum,
-// });
-
 export const excludeExpense = (id) => ({
   type: 'EXCLUDE',
   id,

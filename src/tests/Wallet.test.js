@@ -3,8 +3,14 @@ import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import App from '../App';
 import { renderWithRouterAndRedux } from './helpers/renderWith';
+import mockExpenses from './helpers/mockExpenses';
 
-const VALUE_INPUT = 'value-input';
+const valueInput = 'value-input';
+const descriptionInput = 'description-input';
+const methodInput = 'method-input';
+const hermitPurple = 'Hermit Purple';
+const credit = 'Cartão de crédito';
+const debit = 'Cartão de débito';
 
 describe('Componente Wallet', () => {
   it('Verifica se aparece no header o e-mail utilizado no login', () => {
@@ -28,8 +34,8 @@ describe('Componente Wallet', () => {
     const { history } = renderWithRouterAndRedux(<App />);
     act(() => history.push('/carteira'));
 
-    const value = screen.getByTestId(VALUE_INPUT);
-    const description = screen.getByTestId('description-input');
+    const value = screen.getByTestId(valueInput);
+    const description = screen.getByTestId(descriptionInput);
     const addExpenseButton = screen.getByRole('button', { name: /adicionar despesa/i });
 
     userEvent.type(value, '49,50');
@@ -37,7 +43,7 @@ describe('Componente Wallet', () => {
     await waitFor(() => {
       userEvent.selectOptions(screen.getByTestId('currency-input'), 'JPY');
     }); // Vitu me ajudou em 01/11 com a questão da assincronicidade
-    userEvent.selectOptions(screen.getByTestId('method-input'), 'Cartão de débito');
+    userEvent.selectOptions(screen.getByTestId(methodInput), debit);
     userEvent.selectOptions(screen.getByTestId('tag-input'), 'Lazer');
     expect(addExpenseButton).toBeVisible();
   });
@@ -46,14 +52,14 @@ describe('Componente Wallet', () => {
     const { history } = renderWithRouterAndRedux(<App />);
     act(() => history.push('/carteira'));
 
-    const value = screen.getByTestId('value-input');
-    const description = screen.getByTestId('description-input');
+    const value = screen.getByTestId(valueInput);
+    const description = screen.getByTestId(descriptionInput);
     const addExpenseButton = screen.getByRole('button', { name: /adicionar despesa/i });
     const table = screen.getByRole('table');
 
     userEvent.type(value, '14,70');
-    userEvent.type(description, 'Hermit Purple');
-    userEvent.selectOptions(screen.getByTestId('method-input'), 'Cartão de crédito');
+    userEvent.type(description, hermitPurple);
+    userEvent.selectOptions(screen.getByTestId(methodInput), credit);
     userEvent.selectOptions(screen.getByTestId('tag-input'), 'Transporte');
 
     userEvent.click(addExpenseButton);
@@ -109,6 +115,37 @@ describe('Componente Wallet', () => {
     });
   });
 
+  it('Verifica se a edição é exibida corretamente na tela após sua conclusão', async () => {
+    const { history } = renderWithRouterAndRedux(<App />, { initialState: mockExpenses });
+    // recebi ajuda do Luanderson em 03/11 na ideia de mockar um array pronto de expenses pra fazer o teste e cobrir a linha 37, que estava faltando
+
+    act(() => history.push('/carteira'));
+
+    const value = screen.getByTestId(valueInput);
+    const description = screen.getByTestId(descriptionInput);
+
+    const editButton = screen.getAllByTestId('edit-btn')[0];
+    userEvent.click(editButton);
+
+    userEvent.type(value, '14.70');
+    userEvent.type(description, hermitPurple);
+    userEvent.selectOptions(screen.getByTestId(methodInput), credit);
+    userEvent.selectOptions(screen.getByTestId('tag-input'), 'Transporte');
+
+    const saveEditButton = screen.getByTestId('edit-btn2');
+    userEvent.click(saveEditButton);
+
+    const editedValue = screen.getByText('14.70');
+    const editedDesc = screen.getByText(hermitPurple);
+    const editedMethod = screen.getAllByText(credit);
+    const editedTag = screen.getAllByText('Transporte');
+
+    expect(editedDesc).toBeVisible();
+    expect(editedValue).toBeVisible();
+    expect(editedMethod[1]).toBeVisible();
+    expect(editedTag[1]).toBeVisible();
+  });
+
   it('Verifica se aparece erro em caso de falha no servidor', async () => {
     jest.spyOn(global, 'fetch');
     await global.fetch.mockRejectedValue(
@@ -126,61 +163,4 @@ describe('Componente Wallet', () => {
       userEvent.selectOptions(select, 'Failed to fetch');
     });
   });
-
-  // it('Verifica se a edição é exibida corretamente na tela após sua conclusão', async () => {
-  //   const { history } = renderWithRouterAndRedux(<App />);
-  //   act(() => history.push('/carteira'));
-
-  //   const value = screen.getByTestId('value-input');
-  //   const description = screen.getByTestId('description-input');
-  //   const addButton = screen.getByRole('button', { name: /adicionar despesa/i });
-
-  //   userEvent.type(value, '14,70');
-  //   userEvent.type(description, 'Hermit Purple');
-  //   userEvent.selectOptions(screen.getByTestId('method-input'), 'Cartão de crédito');
-  //   userEvent.selectOptions(screen.getByTestId('tag-input'), 'Transporte');
-  //   userEvent.click(addButton);
-
-  //   await waitFor(() => {
-  //     const editButton = screen.getAllByTestId('edit-btn')[0];
-  //     userEvent.click(editButton);
-
-  //     userEvent.type(value, '14,70');
-  //     userEvent.type(description, 'Hermit Purple');
-  //     userEvent.selectOptions(screen.getByTestId('method-input'), 'Cartão de crédito');
-  //     userEvent.selectOptions(screen.getByTestId('tag-input'), 'Transporte');
-
-  //     const saveEditButton = screen.getByTestId('edit-btn2');
-  //     userEvent.click(saveEditButton);
-  //   });
-
-  //   userEvent.type(value, '49');
-  //   userEvent.type(description, 'Xablau');
-  //   userEvent.selectOptions(screen.getByTestId('method-input'), 'Dinheiro');
-  //   userEvent.selectOptions(screen.getByTestId('tag-input'), 'Alimentação');
-  //   userEvent.click(addButton);
-
-  //   await waitFor(() => {
-  //     const editButton = screen.getAllByTestId('edit-btn')[1];
-  //     userEvent.click(editButton);
-  //   });
-
-  //   userEvent.type(value, '37');
-  //   userEvent.type(description, 'Lagartixa');
-  //   userEvent.selectOptions(screen.getByTestId('method-input'), 'Cartão de débito');
-  //   userEvent.selectOptions(screen.getByTestId('tag-input'), 'Lazer');
-
-  //   const saveEditButton = screen.getByTestId('edit-btn2');
-  //   userEvent.click(saveEditButton);
-
-  //   const editedValue = screen.getByText('37.00');
-  //   const editedDesc = screen.getByText('Lagartixa');
-  //   const editedMethod = screen.getAllByText('Cartão de débito');
-  //   const editedTag = screen.getAllByText('Lazer');
-
-  //   expect(editedDesc).toBeVisible();
-  //   expect(editedValue).toBeVisible();
-  //   expect(editedMethod[1]).toBeVisible();
-  //   expect(editedTag[1]).toBeVisible();
-  // });
 });

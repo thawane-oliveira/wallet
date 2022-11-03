@@ -7,8 +7,6 @@ const INITIAL_STATE = {
   expenses: [],
   editor: false,
   idToEdit: 0,
-  total: 0,
-  shouldEdit: false,
   id: 0,
 };
 
@@ -28,10 +26,10 @@ const wallet = (state = INITIAL_STATE, action) => {
       expenses: [...state.expenses.filter((item) => item.id !== Number(action.id))],
     };
   case EDIT:
-    return { ...state, id: action.id, shouldEdit: true };
+    return { ...state, id: action.id, editor: true };
   case FINISHED:
     return { ...state,
-      shouldEdit: false,
+      editor: false,
       expenses: [
         ...state.expenses.map((item) => (
           item.id === action.info.id ? action.info : item

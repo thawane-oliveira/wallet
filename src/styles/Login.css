@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Arima+Madurai:wght@100;200;300;400;800&family=Petit+Formal+Script&display=swap') ;
+
+body {
+  background-image: url('https://wallpapers.com/images/hd/cute-aesthetic-money-leaving-wallet-lirwo2fio69dogbq.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-size: 30px;
+}
+
+.loginTitle {
+  display: flex;
+  font-family: Petit Formal Script, cursive;
+  font-size: 1.5em;
+  font-weight: 400;
+  height: 4vh;
+  justify-content: flex-end;
+  margin: 0 auto;
+  margin-top: 8vh;
+  text-shadow: 8px 8px 3px rgb(179, 171, 150);
+  width: 100vh;
+}
+
+.loginFieldset {
+  box-shadow: 10px 10px 25px rgb(179, 171, 150);
+  display: flex;
+  height: 4vh;
+  justify-content: space-around;
+  margin: 0 auto;
+  margin-top: 10vh;
+  padding: 3vh;
+  width: 100vh;
+}
+
+.emailInput , .passInput {
+  font-family: Arima Madurai, cursive;
+  font-size: 0.6em;
+  margin-left: 20px;
+  padding: 0.5vh;
+  transition: 0.5s;
+}
+
+.emailInput:focus , .passInput:focus {
+  outline: 1px solid rgb(130, 124, 108);
+}
+
+.emailLabel , .passLabel {
+  font-family: Arima Madurai, cursive;
+  font-size: 1em;
+  font-weight: 400;
+}
+
+.enterButton {
+  border-radius: 6%;
+  cursor: pointer;
+  font-family: Arima Madurai, cursive;
+  font-size: 0.6em;
+  font-weight: 400;
+  height: 3.4vh;
+  margin-top: 1vh;
+  padding: 0.05vh;
+  transition: 0.5s;
+  width: 7vh;
+}
+
+.enterButton:hover {
+  background-color: rgb(202, 198, 198);
+}

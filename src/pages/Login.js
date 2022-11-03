@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { submitInfo } from '../redux/actions';
+import '../styles/Login.css';
 
 class Login extends React.Component {
   constructor() {
@@ -42,11 +43,12 @@ class Login extends React.Component {
     const { email, password, isButtonDisabled } = this.state;
     return (
       <>
-        <div>Login</div>
-        <fieldset>
-          <label htmlFor="emailInput">
+        <h1 className="loginTitle">TrybeWallet</h1>
+        <fieldset className="loginFieldset">
+          <label htmlFor="emailInput" className="emailLabel">
             E-mail
             <input
+              className="emailInput"
               data-testid="email-input"
               type="email"
               id="emailInput"
@@ -58,9 +60,10 @@ class Login extends React.Component {
             />
           </label>
 
-          <label htmlFor="passInput">
+          <label htmlFor="passInput" className="passLabel">
             Senha
             <input
+              className="passInput"
               data-testid="password-input"
               type="password"
               id="passInput"
@@ -73,6 +76,7 @@ class Login extends React.Component {
           </label>
 
           <button
+            className="enterButton"
             type="submit"
             disabled={ isButtonDisabled }
             onClick={ this.submitUserInfo }

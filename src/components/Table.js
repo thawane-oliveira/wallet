@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { editExpense, excludeExpense } from '../redux/actions';
+import '../styles/Table.css';
 
 // consultado sobre table, thead e tbody no w3schools: https://www.w3schools.com/tags/tag_thead.asp
 class Table extends Component {
@@ -54,6 +55,7 @@ class Table extends Component {
               <td>Real</td>
               <td>
                 <button
+                  className="deleteBtn"
                   type="button"
                   data-testid="delete-btn"
                   onClick={ this.rmvXp }
@@ -63,6 +65,7 @@ class Table extends Component {
                   Excluir despesa
                 </button>
                 <button
+                  className="editBtn"
                   type="button"
                   data-testid="edit-btn"
                   onClick={ this.editXp }

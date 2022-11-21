@@ -24,7 +24,7 @@ class Login extends React.Component {
     const { email, password } = this.state;
     const minLength = 6;
     const condition = /^\S+@\S+\.\S+$/;
-    // regex extraído do tópico no link: https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript do Stackoverflow
+
     if (password.length >= minLength && email.match(condition)) {
       this.setState({ isButtonDisabled: false });
     } else {

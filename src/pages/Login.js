@@ -43,7 +43,7 @@ class Login extends React.Component {
     const { email, password, isButtonDisabled } = this.state;
     return (
       <>
-        <h1 className="loginTitle">TrybeWallet</h1>
+        <h1 className="loginTitle">Your Wallet</h1>
         <fieldset className="loginFieldset">
           <label htmlFor="emailInput" className="emailLabel">
             E-mail

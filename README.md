@@ -1,4 +1,4 @@
-<h2>Projeto Jogo de Trivia</h2>
+<h2>Projeto Your Wallet</h2>
 
 <img src="https://github.com/thawane-oliveira/wallet/blob/main/wallet.gif?raw=true" min-width="600px" max-width="600px" width="600px" alt="Aplicação da carteira funcionando, mostrando tela de login, tabela de gastos e funcionalidades.">
 
